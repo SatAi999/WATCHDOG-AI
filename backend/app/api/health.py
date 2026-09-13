@@ -23,6 +23,7 @@ async def system_health_check(db: Session = Depends(get_db)):
     scheduler_status = "RUNNING" if scheduler.running else "STOPPED"
     anakin_status = "CONNECTED (ACTIVE_KEY)" if settings.ANAKIN_API_KEY else "NO_API_KEY"
     jina_status = "CONNECTED (AUTHENTICATED_KEY)" if settings.JINA_API_KEY else "NO_API_KEY"
+    groq_status = "CONNECTED (AUTHENTICATED_KEY)" if settings.GROQ_API_KEY else "NO_API_KEY"
 
     return {
         "status": "HEALTHY" if db_status == "CONNECTED" else "UNHEALTHY",
@@ -32,5 +33,6 @@ async def system_health_check(db: Session = Depends(get_db)):
         "scheduler": scheduler_status,
         "anakin_integration": anakin_status,
         "jina_reader_integration": jina_status,
+        "groq_llm_integration": groq_status,
         "llm_model": settings.LLM_MODEL
     }
