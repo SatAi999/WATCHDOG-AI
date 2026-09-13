@@ -1,0 +1,33 @@
+# Environment Variables & Secrets (NEVER COMMIT)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python Virtual Environment & Cache
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# SQLite Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Node Modules & Next.js Build Output
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+
+# IDE & System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
