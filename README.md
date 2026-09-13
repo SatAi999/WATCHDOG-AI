@@ -55,18 +55,43 @@ When given a natural language mission (e.g. *"Watch Sony WH-1000XM6 and tell me 
 
 ## 🔁 The Core 10-Step Autonomous Loop
 
-```mermaid
-graph TD
-    OBSERVE[1. OBSERVE: Fetch & Normalize Live Web] --> DETECT[2. DETECT: Level 1 & 2 Change Diff]
-    DETECT --> UNDERSTAND[3. UNDERSTAND: Filter Cosmetic Copy Noise]
-    UNDERSTAND --> INVESTIGATE[4. INVESTIGATE: Multi-Source Signal Correlation]
-    INVESTIGATE --> IMPACT[5. ASSESS IMPACT: Weighted Math Score 0-100]
-    IMPACT --> DECIDE[6. DECIDE: Evaluate Permission & Rules]
-    DECIDE --> ACT[7. ACT: Execute Controlled Action]
-    ACT --> VERIFY[8. VERIFY: Confirm State Integrity]
-    VERIFY -- Failure --> REPLAN[9. LEARN / REPLAN: Autonomous Recovery Strategy]
-    REPLAN --> ACT
-    VERIFY -- Success --> MONITOR[10. CONTINUE MONITORING: Persistent Agent Loop State]
+```text
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                           CORE AGENTIC LOOP                              │
+  └──────────────────────────────────────────────────────────────────────────┘
+                                       │
+                                       ▼
+                         1. OBSERVE (Fetch Live Web)
+                                       │
+                                       ▼
+                      2. DETECT (Level 1 & 2 Change Diff)
+                                       │
+                                       ▼
+                   3. UNDERSTAND (Filter Copy & Noise)
+                                       │
+                                       ▼
+                 4. INVESTIGATE (Cross-Source Correlation)
+                                       │
+                                       ▼
+                 5. ASSESS IMPACT (Weighted Math 0-100)
+                                       │
+                                       ▼
+                     6. DECIDE (Evaluate Rules & Policy)
+                                       │
+                                       ▼
+                    7. ACT (Execute Permitted Action)
+                                       │
+                                       ▼
+                     8. VERIFY (Confirm State Integrity)
+                                       │
+                       ┌───────────────┴───────────────┐
+                       │                               │
+                [ Verification Passed ]       [ Verification Failed ]
+                       │                               │
+                       ▼                               ▼
+            10. CONTINUE MONITORING            9. LEARN / REPLAN
+                       ▲                               │
+                       └───────────────────────────────┘
 ```
 
 ---
@@ -77,37 +102,37 @@ WATCHDOG is architected as a stateful, event-driven monolith with clean separati
 
 ```text
                                WATCHDOG FRONTEND (Next.js 14)
-                                             |
-                                             v
+                                             │
+                                             ▼
                                 FASTAPI BACKEND (Python 3.10+)
-                                             |
+                                             │
                                       MISSION ENGINE
-                                             |
-                   +-------------------------+-------------------------+
-                   |                                                   |
-                   v                                                   v
+                                             │
+                   ┌─────────────────────────┴─────────────────────────┐
+                   │                                                   │
+                   ▼                                                   ▼
             SOURCE ENGINE                                         AGENT ENGINE
-                   |                                                   |
-                   |                                   +---------------+---------------+
-                   v                                   |               |               |
-         FETCH MANAGER (Anakin/Jina)                   v               v               v
-                   |                               REASONING       IMPACT MATH      DECISION
-                   +-----------------------------------+---------------+---------------+
-                                                       |
-                                                       v
+                   │                                                   │
+                   │                                   ┌───────────────┼───────────────┐
+                   ▼                                   │               │               │
+         FETCH MANAGER (Anakin/Jina)                   ▼               ▼               ▼
+                   │                               REASONING       IMPACT MATH      DECISION
+                   └───────────────────────────────────┬───────────────┴───────────────┘
+                                                       │
+                                                       ▼
                                                  ACTION ENGINE
-                                                       |
-                                                       v
+                                                       │
+                                                       ▼
                                               VERIFICATION ENGINE
-                                                       |
-                                                       v
+                                                       │
+                                                       ▼
                                             SQLITE PERSISTENCE DB
 ```
 
 ### Technology Stack:
 - **Backend**: Python 3.10+, FastAPI, Pydantic v2, SQLAlchemy 2.0, SQLite, APScheduler, Pytest, HTTPX, BeautifulSoup4.
 - **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS, Lucide Icons, Framer Motion.
-- **Integrations**: Anakin Search, Anakin Agentic Search, Anakin Wire, Anakin Scrape, Anakin Browser, Anakin Webhooks, Jina Reader API.
+- **Integrations**: Anakin Search, Anakin Agentic Search, Anakin Wire, Anakin Scrape, Anakin Browser, Anakin Webhooks, Jina Reader API, Groq LLM API.
 
 ---
 
@@ -261,21 +286,20 @@ Open `http://localhost:3005` in your browser.
 ### Deploying Backend to Render.com
 1. Create a new **Web Service** on [Render.com](https://render.com).
 2. Connect your GitHub repository `https://github.com/SatAi999/WATCHDOG-AI.git`.
-3. Set **Root Directory**: `backend`
-4. Set **Build Command**: `pip install -r requirements.txt`
-5. Set **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-6. Add Environment Variables:
+3. Set **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+4. Add Environment Variables:
    - `ANAKIN_API_KEY`: `your_anakin_api_key`
    - `JINA_API_KEY`: `your_jina_api_key`
+   - `GROQ_API_KEY`: `your_groq_api_key`
+   - `LLM_MODEL`: `llama-3.3-70b-versatile`
    - `EXECUTION_MODE`: `LIVE`
-   - `DATABASE_URL`: `sqlite:///./watchdog.db`
 
 ### Deploying Frontend to Vercel.com
 1. Import your GitHub repository `WATCHDOG-AI` into [Vercel](https://vercel.com).
 2. Set **Framework Preset**: `Next.js`
 3. Set **Root Directory**: `frontend`
 4. Add Environment Variable:
-   - `NEXT_PUBLIC_API_URL`: `https://your-backend-render-url.onrender.com/api`
+   - `NEXT_PUBLIC_API_URL`: `https://watchdog-ai.onrender.com/api`
 5. Click **Deploy**.
 
 ---
